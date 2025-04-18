@@ -7,22 +7,28 @@ def mask_account_card(line):
       mask = "*" * len(account_masking)
       return f'Счет {mask}{without_disguise}'
     else:
-        numbercard_str = str(line)
-        card_type, card_number = numbercard_str.split(maxsplit=1)
+        card_number_str = str(line)
 
-        if len(card_number) <= 10:
-            return f"{card_type} {card_number}"
+        card_type, number_card = card_number_str.rsplit(' ', 1)
 
-        part_masked = "*" * (len(card_number) - 10)
-        number_masked = card_number[:6] + part_masked + card_number[-4:]
+        if len(number_card) <= 10:
+            return f"{card_type} {number_card}"
 
-        formatted_number = " ".join(number_masked[i:i + 4] for i in range(0, len(number_masked), 4))
+        part_masked = "*" * (len(number_card) - 10)
+        number_masked = number_card[:6] + part_masked + number_card[-4:]
 
-    return f"{card_type} {formatted_number}"
+        formatted_masked_number = " ".join(number_masked[i:i + 4] for i in range(0, len(number_masked), 4))
+
+        return f"{card_type} {formatted_masked_number}"
 
 
 print(mask_account_card("Счет 64686473678894779589"))
 print(mask_account_card('MasterCard 7158300734726758'))
+print(mask_account_card('Счет 35383033474447895560'))
+print(mask_account_card('Visa Classic 6831982476737658'))
+print(mask_account_card('Visa Platinum 8990922113665229'))
+print(mask_account_card('Visa Gold 5999414228426353'))
+print(mask_account_card('Счет 73654108430135874305'))
 
 
 from datetime import datetime
