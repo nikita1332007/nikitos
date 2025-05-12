@@ -2,6 +2,7 @@ import pytest
 from datetime import datetime
 from src.widget import mask_account_card, get_date
 
+
 @pytest.fixture
 def account_data():
     return [
@@ -15,6 +16,7 @@ def account_data():
         ("Некорректный ввод", "Некорректный ввод"),
     ]
 
+
 @pytest.mark.parametrize("account_str, expected", [
     ("Счет 64686473678894779589", "Счет **9589"),
     ("MasterCard 7158300734726758", "MasterCard 7158 30** **** 6758"),
@@ -23,7 +25,9 @@ def account_data():
     ("Некорректный ввод", "Некорректный ввод")
 ])
 def test_mask_account_card(account_str, expected):
+
     assert mask_account_card(account_str) == expected
+
 
 @pytest.mark.parametrize("date_str, expected", [
     ("2024-03-11T02:26:18.671407", "11.03.2024"),
@@ -36,8 +40,6 @@ def test_mask_account_card(account_str, expected):
 def get_date(date_str):
     if not isinstance(date_str, str):
         raise ValueError("Input must be a string")
-
-
     try:
         return datetime.fromisoformat(date_str).strftime("%d.%m.%Y")
     except ValueError:

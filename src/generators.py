@@ -1,3 +1,6 @@
+'''Функция фильтрует транзакции по заданной валюте'''
+
+
 def filter_by_currency(transactions, currency):
     for transaction in transactions:
         currency_info = transaction['operationAmount']['currency']
@@ -5,7 +8,7 @@ def filter_by_currency(transactions, currency):
             yield transaction
 
 
-transactions =[
+transactions = [
             {
                 "id": 939719570,
                 "state": "EXECUTED",
@@ -85,14 +88,17 @@ transactions =[
 
 usd_transactions = filter_by_currency(transactions, "RUB")
 for _ in range(2):
-  print(next(usd_transactions))
+    print(next(usd_transactions))
+'''Функция выводит переводы'''
 
 
 def transaction_descriptions(transactions):
     for transaction in transactions:
-      yield transaction['description']
+        yield transaction['description']
 
-transactions =[
+
+transactions = [
+
             {
                 "id": 939719570,
                 "state": "EXECUTED",
@@ -169,18 +175,20 @@ transactions =[
                 "to": "Счет 14211924144426031657"
             }
         ]
+
+
 descriptions = transaction_descriptions(transactions)
 for _ in range(5):
     print(next(descriptions))
 
 
+'''Функция генерирует номер карты'''
 def card_number_generator(start, end):
     for number in range(start, end + 1):
 
         card_str = f"{number:016d}"
         parts = [card_str[i:i+4] for i in range(0, 16, 4)]
         yield " ".join(parts)
-
 
 
 for card_number in card_number_generator(1, 5):

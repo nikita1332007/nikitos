@@ -1,11 +1,13 @@
 from typing import List, Dict, Any
 
+
 def filter_by_state(dictionaries: List[Dict[str, Any]], state: str = 'EXECUTED') -> List[Dict[str, Any]]:
     result = []
     for item in dictionaries:
         if item.get('state') == state:
             result.append(item)
     return result
+
 
 print(filter_by_state([
     {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'},
@@ -14,8 +16,10 @@ print(filter_by_state([
     {'id': 615064591, 'state': 'CANCELED', 'date': '2018-10-14T08:21:33.419441'}
 ]))
 
+
 def sort_by_date(glossary: List[Dict[str, Any]], reverse: bool = True) -> List[Dict[str, Any]]:
     return sorted(glossary, key=lambda x: x['date'], reverse=reverse)
+
 
 print(sort_by_date([
     {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'},

@@ -1,5 +1,4 @@
 import pytest
-
 from src.processing import filter_by_state, sort_by_date
 
 
@@ -11,6 +10,7 @@ def sample_data():
         {'id': 594226727, 'state': 'CANCELED', 'date': '2018-09-12T21:27:25.241689'},
         {'id': 615064591, 'state': 'CANCELED', 'date': '2018-10-14T08:21:33.419441'}
     ]
+
 
 @pytest.mark.parametrize("state, expected", [
     ('EXECUTED', [
@@ -24,7 +24,9 @@ def sample_data():
     ('NON_EXISTENT', [])
 ])
 def test_filter_by_state(sample_data, state, expected):
+
     assert filter_by_state(sample_data, state) == expected
+
 
 @pytest.mark.parametrize("reverse, expected", [
     (True, [
@@ -42,6 +44,7 @@ def test_filter_by_state(sample_data, state, expected):
 ])
 def test_sort_by_date(sample_data, reverse, expected):
     assert sort_by_date(sample_data, reverse) == expected
+
 
 if __name__ == "__main__":
     pytest.main()

@@ -6,7 +6,7 @@ def get_mask_card_number(card_number):
     masked_part = "*" * (len(cardnumber_str) - 10)
     masked_number = cardnumber_str[:6] + masked_part + cardnumber_str[-4:]
 
-    return " ".join(masked_number[x : x + 4] for x in range(0, len(masked_number), 4))
+    return " ".join(masked_number[x: x + 4] for x in range(0, len(masked_number), 4))
 
 
 card_number = 1234567890123456
