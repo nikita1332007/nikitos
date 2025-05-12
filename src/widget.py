@@ -1,11 +1,14 @@
+from datetime import datetime
+
+
 def mask_account_card(line):
     """Функция принмает строку и маскирует у счета 2 цифры а у номера карты 6 цифр"""
     if 'Счет' in line:
-      сropped_string = line[-6:]
-      account_masking = сropped_string[:2]
-      without_disguise = сropped_string[-4:]
-      mask = "*" * len(account_masking)
-      return f'Счет {mask}{without_disguise}'
+        сropped_string = line[-6:]
+        account_masking = сropped_string[:2]
+        without_disguise = сropped_string[-4:]
+        mask = "*" * len(account_masking)
+        return f'Счет {mask}{without_disguise}'
     else:
         card_number_str = str(line)
 
@@ -31,7 +34,6 @@ print(mask_account_card('Visa Gold 5999414228426353'))
 print(mask_account_card('Счет 73654108430135874305'))
 
 
-from datetime import datetime
 def get_date(date_string):
     '''Функция принимет дату и записывает в нужный формат ДД.ММ.ГГ'''
     dt = datetime.fromisoformat(date_string)

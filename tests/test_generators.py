@@ -134,52 +134,6 @@ def transactions_data():
     ]
 
 
-@pytest.fixture
-def expected_cards_small_range():
-    return [
-        "0000 0000 0000 0001",
-        "0000 0000 0000 0002",
-        "0000 0000 0000 0003",
-        "0000 0000 0000 0004",
-        "0000 0000 0000 0005",
-    ]
-
-
-@pytest.fixture
-def expected_cards_edge_case():
-    return [
-        "0000 0000 0000 0000",
-        "9999 9999 9999 9999",
-    ]
-
-
-
-
-def filter_by_currency(transactions, currency_code):
-
-    for transaction in transactions:
-        try:
-            if transaction['operationAmount']['currency']['code'] == currency_code:
-                yield transaction
-        except KeyError:
-
-            continue
-
-
-def transaction_descriptions(transactions):
-    for transaction in transactions:
-        yield transaction['description']
-
-
-def card_number_generator(start, end):
-    for number in range(start, end + 1):
-        card_str = f"{number:016d}"
-        parts = [card_str[i:i+4] for i in range(0, 16, 4)]
-        yield " ".join(parts)
-
-
-
-
 def test_filter_by_currency_with_usd(sample_transactions):
     filtered_transactions = list(filter_by_currency(sample_transactions, 'USD'))
     assert len(filtered_transactions) == 3
@@ -244,7 +198,22 @@ def test_transaction_descriptions_different_descriptions():
     assert descriptions == ["Транзакция 1", "Транзакция 2"]
 
 
-def test_generator_yields_correct_range(expected_cards_small_range):
+@pytest.fixture
+def card_generator():
+    return card_number_generator
 
-  if __name__ == "__main__":
+
+def test_card_number_generator(card_generator):
+    expected_output = ["0000 0000 0000 0000", "0000 0000 0000 0001", "0000 0000 0000 0002", "0000 0000 0000 0003"]
+    assert list(card_generator(0, 3)) == expected_output
+
+    expected_output = ["0000 0000 0000 9999", "0000 0000 0001 0000", "0000 0000 0001 0001", "0000 0000 0001 0002"]
+    assert list(card_generator(9999, 10002))[:4] == expected_output
+
+    assert list(card_generator(0, 0)) == ["0000 0000 0000 0000"]
+    assert list(card_generator(9999, 9999)) == ["0000 0000 0000 9999"]
+    assert list(card_generator(5, 5)) == ["0000 0000 0000 0005"]
+
+
+if __name__ == "__main__":
     pytest.main()

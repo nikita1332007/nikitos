@@ -22,9 +22,11 @@ account_numbers = [
     (100, "**100")
 ]
 
+
 @pytest.mark.parametrize("input_num, expected", card_numbers)
 def test_get_mask_card_number(input_num, expected):
     assert get_mask_card_number(input_num) == expected
+
 
 @pytest.mark.parametrize("input_num, expected", account_numbers)
 def test_get_mask_account(input_num, expected):
