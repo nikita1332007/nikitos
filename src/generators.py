@@ -183,6 +183,8 @@ for _ in range(5):
 
 
 '''Функция генерирует номер карты'''
+
+
 def card_number_generator(start, end):
     for number in range(start, end + 1):
 
