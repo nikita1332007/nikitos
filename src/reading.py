@@ -11,6 +11,7 @@ def read_csv(file_path):
 
 
 csv_result = read_csv(r'C:\Users\Nikita\PycharmProjects\transactions.csv')
+
 print(csv_result)
 
 
