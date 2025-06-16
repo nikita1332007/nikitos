@@ -6,32 +6,38 @@ import logging
 
 
 def load_operations(filename: str) -> pd.DataFrame:
+    """
+        Загружает операции из Excel файла.
+    """
     df = pd.read_excel(filename)
-    # Приведем даты к datetime
     df['Дата операции'] = pd.to_datetime(df['Дата операции'], dayfirst=True)
     df['Дата платежа'] = pd.to_datetime(df['Дата платежа'], dayfirst=True)
     return df
 
 
 def get_date_range(input_datetime: datetime):
+    """
+        Получает диапазон дат на основе входной даты.
+    """
     start_date = input_datetime.replace(day=1).date()
     end_date = input_datetime.date()
     return start_date, end_date
 
 
 def load_user_settings(path='user_settings.json'):
+    """
+        Загружает настройки пользователя из JSON файла.
+    """
     with open(path, 'r', encoding='utf-8') as f:
         settings = json.load(f)
     return settings
 
 
 def get_greeting(input_datetime: datetime) -> str:
+    """
+        Генерирует приветствие в зависимости от времени суток.
+    """
     current_time = input_datetime.time()
-    # Условные границы (24ч)
-    # Доброй ночи: 00:00 - 05:59
-    # Доброе утро: 06:00 - 11:59
-    # Добрый день: 12:00 - 17:59
-    # Добрый вечер: 18:00 - 23:59
     if time(0, 0) <= current_time < time(6, 0):
         return "Доброй ночи"
     elif time(6, 0) <= current_time < time(12, 0):
@@ -43,11 +49,17 @@ def get_greeting(input_datetime: datetime) -> str:
 
 
 def filter_operations_by_date(df: pd.DataFrame, start_date, end_date) -> pd.DataFrame:
+    """
+        Фильтрует операции по диапазону дат.
+    """
     mask = (df['Дата операции'].dt.date >= start_date) & (df['Дата операции'].dt.date <= end_date)
     return df.loc[mask]
 
 
 def aggregate_cards(df: pd.DataFrame):
+    """
+      Аггрегирует расходы по картам и вычисляет кэшбэк.
+    """
     df_ok = df[df['Статус'] == 'OK']
     grouped = df_ok.groupby('Номер карты')['Сумма платежа'].sum()
 
@@ -63,6 +75,9 @@ def aggregate_cards(df: pd.DataFrame):
 
 
 def top_transactions(df: pd.DataFrame, top_n=5):
+    """
+       Получает топ-N транзакций по сумме платежа.
+    """
     df_ok = df[df['Статус'] == 'OK']
     df_sorted = df_ok.sort_values(by='Сумма платежа', ascending=False).head(top_n)
 
@@ -99,6 +114,9 @@ def get_currency_rates(base='RUB', symbols=None):
 
 
 def get_stock_prices(symbols):
+    """
+    Получает текущие цены акций по указанным символам.
+    """
     if len(symbols) == 0:
 
         return {}
@@ -123,34 +141,28 @@ def get_stock_prices(symbols):
 def generate_report(input_datetime_str: str,
                     excel_path='operations.xlsx',
                     user_settings_path='user_settings.json'):
-    # Преобразуем строку во datetime
+    """
+       Генерирует отчет на основе операций и настроек пользователя.
+    """
     input_datetime = datetime.strptime(input_datetime_str, '%Y-%m-%d %H:%M:%S')
 
-    # Чтение данных
     df = load_operations(excel_path)
     start_date, end_date = get_date_range(input_datetime)
 
-    # Загрузка настроек
     settings = load_user_settings(user_settings_path)
     user_currencies = settings.get('user_currencies', [])
     user_stocks = settings.get('user_stocks', [])
 
-    # Фильтрация данных
     df_filtered = filter_operations_by_date(df, start_date, end_date)
 
-    # Приветствие
     greeting = get_greeting(input_datetime)
 
-    # Данные по картам
     cards_data = aggregate_cards(df_filtered)
 
-    # Топ-5 транзакций
     top5 = top_transactions(df_filtered)
 
-    # Курсы валют (относительно рубля)
     rates = get_currency_rates(base='RUB', symbols=user_currencies)
 
-    # Цены акций
     stock_prices = get_stock_prices(user_stocks)
 
     result = {

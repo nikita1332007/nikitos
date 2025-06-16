@@ -7,19 +7,18 @@ from unittest.mock import patch, mock_open
 def expenses_by_category(df, category):
     total = df[df['Категория'] == category]['Сумма'].sum()
     with open('report_output.json', 'w') as f:
-        f.write(str(total))  # Простой вывод суммы
+        f.write(str(total))
     return total
 
 
 def weekly_expenses(df):
     weekly_exp = {day: 0.0 for day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']}
 
-    # Заполняем словарь
     for _, row in df.iterrows():
-        day_name = row['Дата'].strftime('%A')  # Получаем название дня недели
-        weekly_exp[day_name] += row['Сумма']  # Суммируем расходы
+        day_name = row['Дата'].strftime('%A')
+        weekly_exp[day_name] += row['Сумма']
 
-    return {day: float(amount) for day, amount in weekly_exp.items()}  # Приводим к float для сериализации
+    return {day: float(amount) for day, amount in weekly_exp.items()}
 
 
 class TestExpenseFunctions(unittest.TestCase):
@@ -42,7 +41,6 @@ class TestExpenseFunctions(unittest.TestCase):
         result = expenses_by_category(self.df, 'Еда')
         self.assertEqual(result, 300)  # Ожидаемая сумма: 100 + 200
 
-        # Проверяем, что файл был записан
         mock_file.assert_called_once_with('report_output.json', 'w')
         handle = mock_file()
         handle.write.assert_called_once_with('300')

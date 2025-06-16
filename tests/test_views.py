@@ -79,5 +79,7 @@ class TestReportGenerator(unittest.TestCase):
 
         prices = get_stock_prices(['AAPL', 'GOOG'])
         self.assertEqual(prices, {'AAPL': 300.5, 'GOOG': 1400.7})
+
+
 if __name__ == '__main__':
     unittest.main()
